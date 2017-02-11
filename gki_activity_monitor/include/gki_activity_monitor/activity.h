@@ -19,10 +19,9 @@ class Activity
 {
 public:
   typedef boost::shared_ptr<Activity> Ptr;
-  gki_activity_msgs::Activity::ConstPtr msg_;
 
-  static Activity::Ptr start(const std::string& description, bool use_wall_time=false);
-  Activity(gki_activity_msgs::Activity::ConstPtr a);
+  static Activity::Ptr start(const std::string& description, bool wall_time_only = false);
+  static Activity::Ptr fromMsg(gki_activity_msgs::Activity::ConstPtr msg);
   virtual ~Activity();
 
   void finish();
@@ -40,8 +39,11 @@ public:
   gki_activity_msgs::Activity::_id_type getId() const;
   const std::string& getDescription() const;
 
+  gki_activity_msgs::Activity::ConstPtr getMsg() const;
+
 private:
-  Activity();
+  Activity(gki_activity_msgs::Activity::ConstPtr msg);
+  gki_activity_msgs::Activity::ConstPtr msg_;
   ros::WallTime start_wall_time_;
   ros::WallTime finish_wall_time_;
   ros::WallDuration wall_duration_;

@@ -37,7 +37,7 @@ Monitor::~Monitor()
 
 void Monitor::activityCallback(gki_activity_msgs::Activity::ConstPtr msg)
 {
-  Activity::Ptr activity = boost::make_shared<Activity>(msg);
+  Activity::Ptr activity = Activity::fromMsg(msg);
   if (activity->isFinished())
   {
     ongoing_.erase(activity->getId());

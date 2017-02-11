@@ -10,14 +10,14 @@
 namespace activity_monitoring
 {
 
-Activity::Ptr Activity::start(const std::string& description, bool use_wall_time)
+Activity::Ptr Activity::start(const std::string& description, bool wall_time_only)
 {
   gki_activity_msgs::Activity::Ptr msg(new gki_activity_msgs::Activity);
   msg->description = description;
   ros::WallTime t = ros::WallTime::now();
   msg->start_wall_time.sec = t.sec;
   msg->start_wall_time.nsec = t.nsec;
-  if (use_wall_time)
+  if (! wall_time_only)
   {
     msg->start_time = ros::Time::now();
   }
@@ -26,8 +26,14 @@ Activity::Ptr Activity::start(const std::string& description, bool use_wall_time
   return a;
 }
 
-Activity::Activity(gki_activity_msgs::Activity::ConstPtr a):
-    msg_(a)
+Activity::Ptr Activity::fromMsg(gki_activity_msgs::Activity::ConstPtr msg)
+{
+  Activity::Ptr a(new Activity(msg));
+  return a;
+}
+
+Activity::Activity(gki_activity_msgs::Activity::ConstPtr msg):
+    msg_(msg)
 {
   start_wall_time_.sec = msg_->start_wall_time.sec;
   start_wall_time_.nsec = msg_->start_wall_time.nsec;
@@ -47,8 +53,7 @@ Activity::~Activity()
 
 void Activity::finish()
 {
-  // TODO finish
-  // todo: refactor
+
 }
 
 const ros::WallTime& Activity::getStartWallTime() const
@@ -94,6 +99,11 @@ bool Activity::usesWallTime() const
 gki_activity_msgs::Activity::_id_type Activity::getId() const
 {
   return msg_->id;
+}
+
+gki_activity_msgs::Activity::ConstPtr Activity::getMsg() const
+{
+  return msg_;
 }
 
 } /* namespace activity_monitoring */

@@ -11,7 +11,6 @@
 #include <ros/ros.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
-#include <boost/make_shared.hpp>
 #include <gki_activity_msgs/Activity.h>
 #include <gki_activity_monitor/activity.h>
 

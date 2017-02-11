@@ -17,7 +17,7 @@ namespace activity_monitoring
 class ScopedActivity
 {
 public:
-  ScopedActivity(const std::string& description, bool use_wall_time=false);
+  ScopedActivity(const std::string& description, bool wall_time_only=false);
   virtual ~ScopedActivity();
 private:
   Monitor::Ptr monitor_;

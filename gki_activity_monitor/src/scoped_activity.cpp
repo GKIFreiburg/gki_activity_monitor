@@ -10,17 +10,17 @@
 namespace activity_monitoring
 {
 
-ScopedActivity::ScopedActivity(const std::string& description, bool use_wall_time)
+ScopedActivity::ScopedActivity(const std::string& description, bool wall_time_only)
 {
-  activity_ = Activity::start(description, use_wall_time);
+  activity_ = Activity::start(description, wall_time_only);
   monitor_ = Monitor::instance();
-  monitor_->addAction(activity_->msg_);
+  monitor_->addAction(activity_->getMsg());
 }
 
 ScopedActivity::~ScopedActivity()
 {
   activity_->finish();
-  monitor_->addAction(activity_->msg_);
+  monitor_->addAction(activity_->getMsg());
 }
 
 } /* namespace activity_monitoring */
