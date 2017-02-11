@@ -35,7 +35,7 @@ public:
   const ros::Duration& getDuration() const;
 
   bool isFinished() const;
-  bool usesWallTime() const;
+  bool usesWallTimeOnly() const;
   gki_activity_msgs::Activity::_id_type getId() const;
   const std::string& getDescription() const;
 

@@ -53,7 +53,16 @@ Activity::~Activity()
 
 void Activity::finish()
 {
-
+  gki_activity_msgs::Activity::Ptr msg(new gki_activity_msgs::Activity);
+  *msg = *msg_;
+  ros::WallTime t = ros::WallTime::now();
+  msg->finish_wall_time.sec = t.sec;
+  msg->finish_wall_time.nsec = t.nsec;
+  if (! usesWallTimeOnly())
+  {
+    msg->finish_time = ros::Time::now();
+  }
+  msg_ = msg;
 }
 
 const ros::WallTime& Activity::getStartWallTime() const
@@ -91,7 +100,7 @@ bool Activity::isFinished() const
   return is_finished_;
 }
 
-bool Activity::usesWallTime() const
+bool Activity::usesWallTimeOnly() const
 {
   return msg_->start_time <= ros::Time(0);
 }
