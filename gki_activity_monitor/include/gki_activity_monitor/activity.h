@@ -19,6 +19,7 @@ class Activity
 {
 public:
   typedef boost::shared_ptr<Activity> Ptr;
+  typedef boost::shared_ptr<Activity const> ConstPtr;
 
   static Activity::Ptr start(const std::string& description, bool wall_time_only = false);
   static Activity::Ptr fromMsg(gki_activity_msgs::Activity::ConstPtr msg);

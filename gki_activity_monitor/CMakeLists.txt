@@ -120,6 +120,8 @@ include_directories(
 add_library(gki_activity_monitor
   src/activity.cpp
   src/monitor.cpp
+  src/timeline.cpp
+  src/event_iterator.cpp
   src/scoped_activity.cpp
 )
 

@@ -12,7 +12,9 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include <gki_activity_msgs/Activity.h>
+
 #include <gki_activity_monitor/activity.h>
+#include <gki_activity_monitor/timeline.h>
 
 namespace activity_monitoring
 {
@@ -27,14 +29,13 @@ public:
   virtual ~Monitor();
 
   void activityCallback(gki_activity_msgs::Activity::ConstPtr msg);
-  void addAction(gki_activity_msgs::Activity::ConstPtr msg);
+  void addActivity(gki_activity_msgs::Activity::ConstPtr msg);
 
 private:
   Monitor();
   static boost::weak_ptr<Monitor> instance_;
 
-  ActivityContainer ongoing_;
-  ActivityContainer finished_;
+  Timeline activities_;
 
   ros::Subscriber subscriber_;
   ros::Publisher publisher_;

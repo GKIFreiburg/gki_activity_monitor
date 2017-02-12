@@ -38,18 +38,10 @@ Monitor::~Monitor()
 void Monitor::activityCallback(gki_activity_msgs::Activity::ConstPtr msg)
 {
   Activity::Ptr activity = Activity::fromMsg(msg);
-  if (activity->isFinished())
-  {
-    ongoing_.erase(activity->getId());
-    finished_[activity->getId()] = activity;
-  }
-  else
-  {
-    ongoing_[activity->getId()] = activity;
-  }
+  activities_.insert(activity);
 }
 
-void Monitor::addAction(gki_activity_msgs::Activity::ConstPtr msg)
+void Monitor::addActivity(gki_activity_msgs::Activity::ConstPtr msg)
 {
   // publish to peers and to self
   publisher_.publish(msg);
