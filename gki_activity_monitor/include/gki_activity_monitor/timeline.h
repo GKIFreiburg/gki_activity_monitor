@@ -10,60 +10,60 @@
 
 #include <gki_activity_msgs/Activity.h>
 #include <gki_activity_monitor/activity.h>
-#include <gki_activity_monitor/event_iterator.h>
 
 namespace activity_monitoring
 {
 
-struct ActivityStartComparator
+struct Event
 {
-  bool operator()(Activity::ConstPtr a, Activity::ConstPtr b)
+  enum Type
   {
-    if (a->getId() == b->getId())
+    ACTIVITY_START,
+    ACTIVITY_FINISH
+  };
+  Type type;
+  ros::WallTime event_time;
+  long activity_id;
+
+  static Event start(Activity::ConstPtr a);
+  static Event finish(Activity::ConstPtr a);
+};
+
+struct EventComparator
+{
+  bool operator()(const Event& a, const Event& b)
+  {
+    if (a.activity_id == b.activity_id)
     {
-      return false;
+      if (a.type == b.type)
+      {
+        return false;
+      }
     }
-    return a->getStartWallTime() < b->getStartWallTime();
+    return a.event_time < b.event_time;
   }
 };
 
-struct ActivityFinishComparator
-{
-  bool operator()(Activity::ConstPtr a, Activity::ConstPtr b)
-  {
-    if (a->getId() == b->getId())
-    {
-      return false;
-    }
-    return a->getFinishWallTime() < b->getFinishWallTime();
-  }
-};
+typedef std::map<Event, Activity::ConstPtr, EventComparator> EventTimelineMap;
 
 class Timeline
 {
 public:
   typedef boost::shared_ptr<Timeline> Ptr;
   typedef boost::shared_ptr<Timeline const> ConstPtr;
-  typedef std::set<Activity::ConstPtr> ActivitySet;
-  typedef std::set<Activity::ConstPtr, ActivityStartComparator> StartedActivitySet;
-  typedef std::set<Activity::ConstPtr, ActivityFinishComparator> FinishedActivitySet;
+  typedef EventTimelineMap::const_iterator const_iterator;
 
   Timeline();
   virtual ~Timeline();
 
   void insert(Activity::ConstPtr a);
-  size_t erase(Activity::ConstPtr a);
   void clear();
-
-  const StartedActivitySet& getStartedActivities() const;
-  const FinishedActivitySet& getFinishedActivities() const;
-
-//  EventIterator begin() const;
-//  EventIterator end() const;
+  EventTimelineMap::const_iterator begin() const;
+  EventTimelineMap::const_iterator end() const;
 
 private:
-  StartedActivitySet started_;
-  FinishedActivitySet finished_;
+  EventTimelineMap events_;
+
 };
 
 } /* namespace activity_monitoring */

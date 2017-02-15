@@ -23,7 +23,6 @@ class Monitor
 {
 public:
   typedef boost::shared_ptr<Monitor> Ptr;
-  typedef std::map<gki_activity_msgs::Activity::_id_type, Activity::Ptr> ActivityContainer;
 
   static Monitor::Ptr instance();
   virtual ~Monitor();
@@ -31,11 +30,13 @@ public:
   void activityCallback(gki_activity_msgs::Activity::ConstPtr msg);
   void addActivity(gki_activity_msgs::Activity::ConstPtr msg);
 
+  Timeline::ConstPtr getTimeline() const;
+
 private:
   Monitor();
   static boost::weak_ptr<Monitor> instance_;
 
-  Timeline activities_;
+  Timeline::Ptr activities_;
 
   ros::Subscriber subscriber_;
   ros::Publisher publisher_;

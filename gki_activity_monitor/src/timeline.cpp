@@ -10,6 +10,24 @@
 namespace activity_monitoring
 {
 
+Event Event::start(Activity::ConstPtr a)
+{
+  Event e;
+  e.activity_id = a->getId();
+  e.event_time = a->getStartWallTime();
+  e.type = Event::ACTIVITY_START;
+  return e;
+}
+
+Event Event::finish(Activity::ConstPtr a)
+{
+  Event e;
+  e.activity_id = a->getId();
+  e.event_time = a->getFinishWallTime();
+  e.type = Event::ACTIVITY_FINISH;
+  return e;
+}
+
 Timeline::Timeline()
 {
 }
@@ -20,43 +38,26 @@ Timeline::~Timeline()
 
 void Timeline::insert(const Activity::ConstPtr a)
 {
-  started_.insert(a);
+  events_[Event::start(a)] = a;
   if (a->isFinished())
   {
-    finished_.insert(a);
+    events_[Event::finish(a)] = a;
   }
-}
-
-size_t Timeline::erase(Activity::ConstPtr a)
-{
-  finished_.erase(a);
-  return finished_.erase(a);
 }
 
 void Timeline::clear()
 {
-  started_.clear();
-  finished_.clear();
+  events_.clear();
 }
 
-const Timeline::StartedActivitySet& Timeline::getStartedActivities() const
+EventTimelineMap::const_iterator Timeline::begin() const
 {
-  return started_;
+  return events_.begin();
 }
 
-const Timeline::FinishedActivitySet& Timeline::getFinishedActivities() const
+EventTimelineMap::const_iterator Timeline::end() const
 {
-  return finished_;
+  return events_.end();
 }
-
-//EventIterator Timeline::begin() const
-//{
-//
-//}
-//
-//EventIterator Timeline::end() const
-//{
-//
-//}
 
 } /* namespace activity_monitoring */

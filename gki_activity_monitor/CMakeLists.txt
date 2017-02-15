@@ -121,8 +121,9 @@ add_library(gki_activity_monitor
   src/activity.cpp
   src/monitor.cpp
   src/timeline.cpp
-  src/event_iterator.cpp
   src/scoped_activity.cpp
+  src/event_string_formatter.cpp
+  src/min_duration_filter.cpp
 )
 
 ## Add cmake target dependencies of the library
