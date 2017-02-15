@@ -7,8 +7,6 @@
 
 #include <gki_activity_monitor/monitor.h>
 
-#include <boost/make_shared.hpp>
-
 namespace activity_monitoring
 {
 
